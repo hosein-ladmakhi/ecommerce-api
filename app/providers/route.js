@@ -11,12 +11,18 @@ const {
   updateProvidersValidation,
   createProvidersValidation,
 } = require("./validation");
+const { multerUploader } = require("../multerMiddleware");
 const router = express.Router();
 
 router.get("/", getProviders);
 router.get("/:id", getProviderById);
 router.patch("/:id", validate(updateProvidersValidation), updateProviderById);
 router.delete("/:id", deleteProviderById);
-router.post("/", validate(createProvidersValidation), createNewProvider);
+router.post(
+  "/",
+  multerUploader.single("logo"),
+  validate(createProvidersValidation),
+  createNewProvider
+);
 
 module.exports = router;
