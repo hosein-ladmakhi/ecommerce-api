@@ -1,28 +1,35 @@
-const express = require("express");
+const express = require('express');
 const {
   createNewCategory,
   deleteCategoryById,
   getCategories,
   getCategoryById,
   updateCategoryById,
-} = require("./controller");
-const { validate } = require("../validationMiddleware");
+} = require('./controller');
+const { validate } = require('../validationMiddleware');
 const {
   createCategoryValidation,
   updateCategoryValidation,
-} = require("./validation");
-const { multerUploader } = require("../multerMiddleware");
+} = require('./validation');
+const { multerUploader } = require('../multerMiddleware');
+const { authMiddleware } = require('../authMiddleware');
 const router = express.Router();
 
-router.get("/", getCategories);
-router.get("/:id", getCategoryById);
+router.get('/', authMiddleware, getCategories);
+router.get('/:id', authMiddleware, getCategoryById);
 router.post(
-  "/",
-  multerUploader.single("image"),
+  '/',
+  authMiddleware,
+  multerUploader.single('image'),
   validate(createCategoryValidation),
-  createNewCategory
+  createNewCategory,
 );
-router.patch("/:id", validate(updateCategoryValidation), updateCategoryById);
-router.delete("/:id", deleteCategoryById);
+router.patch(
+  '/:id',
+  authMiddleware,
+  validate(updateCategoryValidation),
+  updateCategoryById,
+);
+router.delete('/:id', authMiddleware, deleteCategoryById);
 
 module.exports = router;

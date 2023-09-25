@@ -1,28 +1,35 @@
-const express = require("express");
+const express = require('express');
 const {
   createNewProduct,
   deleteProductById,
   getProductById,
   getProducts,
   updateProductById,
-} = require("./controller");
+} = require('./controller');
 const {
   createProductValidation,
   updateProductValidation,
-} = require("./validation");
-const { validate } = require("../validationMiddleware");
-const { multerUploader } = require("../multerMiddleware");
+} = require('./validation');
+const { validate } = require('../validationMiddleware');
+const { multerUploader } = require('../multerMiddleware');
+const { authMiddleware } = require('../authMiddleware');
 const router = express.Router();
 
-router.get("/", getProducts);
-router.get("/:id", getProductById);
+router.get('/', authMiddleware, getProducts);
+router.get('/:id', authMiddleware, getProductById);
 router.post(
-  "/",
-  multerUploader.single("image"),
+  '/',
+  authMiddleware,
+  multerUploader.single('image'),
   validate(createProductValidation),
-  createNewProduct
+  createNewProduct,
 );
-router.patch("/:id", validate(updateProductValidation), updateProductById);
-router.delete("/:id", deleteProductById);
+router.patch(
+  '/:id',
+  authMiddleware,
+  validate(updateProductValidation),
+  updateProductById,
+);
+router.delete('/:id', authMiddleware, deleteProductById);
 
 module.exports = router;
