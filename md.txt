@@ -1,0 +1,2 @@
+APP_PORT=8080
+APP_DB_URL=mongodb+srv://polygony:nima1381@cluster0.hdjlm.mongodb.net/ecommerceDb?retryWrites=true&w=majority
